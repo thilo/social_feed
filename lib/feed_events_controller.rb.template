@@ -1,0 +1,6 @@
+class FeedEventsController < ApplicationController
+  include SocialFeed::FeedEventsControllerExtension
+
+	# add your custom methods here
+  
+end

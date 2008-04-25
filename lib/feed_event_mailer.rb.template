@@ -1,0 +1,6 @@
+class FeedEventMailer < ActionMailer::Base
+	include SocialFeed::FeedEventMailerExtension
+
+	# add your emails here or use the generator to generate stubs
+  
+end

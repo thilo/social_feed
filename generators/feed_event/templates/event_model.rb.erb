@@ -1,0 +1,5 @@
+class <%= event_name.camelize %>Event < FeedEvent
+  subscribe_description 'A <%= event_name.humanize %> event occurs'
+  privacy_description 'I cause a <%= event_name.humanize %> event'
+
+end

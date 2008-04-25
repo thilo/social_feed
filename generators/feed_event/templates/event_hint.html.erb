@@ -1,0 +1,4 @@
+<div id="<%%= dom_id(event) %>" class="feed_event">
+	A <%= event_name.humanize %> event occured.
+	<%%= link_to_remote 'Destroy', :url => feed_event_path(event), :method => :delete %>
+</div>

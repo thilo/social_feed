@@ -1,0 +1,6 @@
+<div id="user_feed">
+  <%- user_feed.each do |event| -%>
+	  <%= render :partial => feed_event_partial_name(event), :locals => {:event => event} %>
+	<% end %>
+</div>
+

@@ -1,0 +1,22 @@
+Plugin setup
+
+* to create the necessary migration run:
+
+script/generate social_feed_migration
+rake db:migrate
+
+* add the following line to the top of your config/routes.rb:
+
+map.from_plugin 'social_feed' 
+
+* add the following line to the Rails::Initializer block in your environment.rb
+
+config.load_paths << RAILS_ROOT + '/app/models/events'
+
+* add the following line to your User class
+
+include SocialFeed::UserExtension
+
+* make sure you have the prototype javascript library loaded in your views, e.g. with the following line in your views/layouts/application.html.erb
+
+<%= javascript_include_tag :defaults %>

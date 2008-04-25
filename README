@@ -1,0 +1,70 @@
+SocialFeed
+==========
+
+This plugin adds a social feed to your rails application. Users can decide what kinds of events they want to see on their social feed and also wether they want to be sent an email when an event occurs. They can also decide wether others will receive a notification on their social feed concerning their own actions.
+
+How it works
+============
+
+The plugins adds the following things to your application
+* a FeedEvent model - this represents an event on the social feed - you will subclass the SocialFeed to create your own custom events
+* a SocialFeedsController - this controller has actions for:
+  * displaying the social feed for a user (index)
+  * destroying a SocialFeed
+  * displaying a settings page where users can 
+    * subscribe to and unsubscribe from events
+    * subscirbe to and unsubscribe from receiving emails for events
+    * enable/disable the creation of events concerning their own actions in the application
+* a migration that adds 3 fields to your users table to store the event subscriptions
+
+
+Installation
+============
+
+see the INSTALL file
+
+Assumptions
+===========
+
+the socialfeed plugin assumes that:
+
+* your users are represented via the User model
+* your users have an email attribute (used by the feed event mailer)
+* the controllers in your application have access to the currently logged in user via the current_user method
+
+Basic User Experience
+=====================
+
+After the plugin is installed you can direct your users to the /feed_events url which will show them their personal social feed. To customize their events the users should go to /feed_events/settings
+
+How to create custom events types
+=================================
+
+To create a custom event you should use the built-in feed_event generator:
+
+e.g.: script/generate feed_event new_friend
+
+This creates a new class NewFriendEvent in the app/models/events directory (the class representing the event) as well as a new_friend_hint.html.erb file in the app/views/feed_events directory (this gets rendered on people's social feed page). First thing you probably want to do is to customize the hint file.
+
+Secondly you should also customize the two description lines in the model, which will be used on the setting page. By commenting out either line, you can remove the corresponding line from the setings page.
+
+If you want your users to be able to receive emails for your new event, add a method deliver_new_friend to the FeedEventMailer found in app/models/feed_events. After adding the method a checkbox for this event will automatically appear on the settings page.
+
+Creating actual events
+======================
+
+In order for the social feeds of your users to get filled with events you have to create instances of your custom event classes. You have a number of choices here. I would recommend to use the rails observers, so for a NewFriendEvent you would probably create a FriendShipObserver with an after_create hook that creates the event when after a new friendship has been created. As soon as you start creating lots of events for a single action (e.g. tell every user that user X and user Y are now friends) I would highly recommend using something asynchronous like the workling plugin and starling.
+
+Warning: Do not create events using create! but use the create method (without the bang) - when a user has not subscribed to an event, a validation in the FeedEvent class will fail so that the event won't be created. If you use the create! method you will get an exception instead.
+
+Gotchas
+=======
+
+For all models of you application you use as a source for a FeedEvent, add a
+:has_many :feed_events, :dependent => :destroy
+so that the feed events are destroyed when objects are destroyed. Otherwise the social feeds of you users will get into trouble with sources of events missing.
+
+
+
+
+Copyright (c) 2008 Alexander Lang, released under the MIT license

@@ -1,0 +1,36 @@
+<h2>Subscriptions</h2>
+<table>
+	<tr>
+		<th>Feed</th>
+		<th>Email</th>
+		<th>Event</th>
+	</tr>
+	<%- FeedEvent.subscribable_feed_event_types.each do |clazz| -%>
+		<tr id="<%= clazz.name + '_row' %>">
+			<td>
+				<%= check_box_tag clazz.name + '_feed', '1', current_user.subscribed_to_feed_event?(clazz) %>
+				<%= observe_field clazz.name + '_feed', :url => toggle_subscription_feed_events_path(:event => clazz.name), :success => "new Effect.Highlight('#{clazz.name + '_row'}')" %>
+			</td>
+			<td>
+				<%- if clazz.can_send_email? -%>
+					<%= check_box_tag clazz.name + '_mail', '1', current_user.subscribed_to_email?(clazz) %>
+					<%= observe_field clazz.name + '_mail', :url => toggle_email_subscription_feed_events_path(:event => clazz.name), :success => "new Effect.Highlight('#{clazz.name + '_row'}')" %>
+				<%- end -%>
+			</td>
+			<td class="blue_font"><%= clazz.subscribe_description %></td>
+		</tr>
+	<%- end -%>
+</table>
+
+<h2>Privacy Settings</h2>
+<table>
+	<%- FeedEvent.enabable_feed_event_types.each do |clazz| -%>
+		<tr id="<%= "#{clazz.name + '_privacy_row'}" %>">
+			<td>
+				<%= check_box_tag clazz.name + '_privacy', '1', current_user.feed_event_enabled?(clazz) %>
+				<%= observe_field clazz.name + '_privacy', :url => toggle_enabled_feed_events_path(:event => clazz.name), :success => "new Effect.Highlight('#{clazz.name + '_privacy_row'}')" %>
+			</td>
+			<td><%= clazz.privacy_description %></td>
+		</tr>
+	<%- end -%>
+</table>
