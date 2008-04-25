@@ -25,6 +25,9 @@ FileUtils.cp __DIR__ + '/views/index.html.erb', RAILS_ROOT + '/app/views/feed_ev
 FileUtils.cp __DIR__ + '/views/settings.html.erb', RAILS_ROOT + '/app/views/feed_events'
 FileUtils.cp __DIR__ + '/views/destroy.rjs', RAILS_ROOT + '/app/views/feed_events'
 FileUtils.cp __DIR__ + '/views/_user_feed.html.erb', RAILS_ROOT + '/app/views/feed_events'
+
+# copy config file
+FileUtils.cp __DIR__ + '/social_feed.yml', RAILS_ROOT + '/config'
  
 # add routes
 # done by user
