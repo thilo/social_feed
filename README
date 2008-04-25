@@ -21,7 +21,18 @@ The plugins adds the following things to your application
 Installation
 ============
 
-see the INSTALL file
+If you are on rails edge (which supports git) you can simply do a 
+script/plugin install git://github.com/langalex/social_feed.git
+
+If not you need to do this from your rails root:
+
+cd vendor/plugins
+git clone git://github.com/langalex/social_feed.git --depth 1
+cd social_feed
+ruby install.rb
+cd ../../..
+
+for the rest see the INSTALL file
 
 Assumptions
 ===========
