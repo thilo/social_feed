@@ -56,7 +56,7 @@ class FeedEvent < ActiveRecord::Base
   private
   def send_email
     FeedEventMailer.send "deliver_#{self.class.name.underscore[0..-7]}", self if self.class.can_send_email? && 
-      (user.subscribed_to_email?(self.class) || self.class.user_cannot_subscribe_to_event?) && !user.online?
+      (user.subscribed_to_email?(self.class) || self.class.user_cannot_subscribe_to_event?) && !user.try(:online?)
   end
   
   def self.load_subclasses

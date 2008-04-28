@@ -29,7 +29,7 @@ class FeedEventMailer; end
 require File.dirname(__FILE__) + '/../generators/social_feed_migration/templates/migration'
 AddSocialFeed.up
 
-require PLUGIN_ROOT + '/lib/if_not_nil'
+require PLUGIN_ROOT + '/lib/object_extensions'
 
 
 # rspec rails stuff

@@ -136,6 +136,11 @@ describe FeedEvent, 'check subscription before sending emails' do
     TestFeedEvent.create :user => @user
   end
   
+  it "should send an email user user subscribed to email and has no online method" do
+    FeedEventMailer.should_receive(:send).with('deliver_test_feed', anything)
+    TestFeedEvent.create :user => mock_model(User, :subscribed_to_email? => true, :subscribed_to_feed_event? => false)
+  end
+  
   it "should check the subscription of the user" do
     @user.should_receive(:subscribed_to_email?).with(TestFeedEvent).and_return(false)
     TestFeedEvent.create :user => @user

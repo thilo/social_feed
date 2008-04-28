@@ -1,4 +1,4 @@
-require 'if_not_nil'
+require 'object_extensions'
 
 # configuration
 require 'ostruct'
