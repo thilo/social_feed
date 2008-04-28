@@ -64,7 +64,13 @@ If you want your users to be able to receive emails for your new event, add a me
 Creating actual events
 ======================
 
-In order for the social feeds of your users to get filled with events you have to create instances of your custom event classes. You have a number of choices here. I would recommend to use the rails observers, so for a NewFriendEvent you would probably create a FriendShipObserver with an after_create hook that creates the event when after a new friendship has been created. As soon as you start creating lots of events for a single action (e.g. tell every user that user X and user Y are now friends) I would highly recommend using something asynchronous like the workling plugin and starling.
+In order for the social feeds of your users to get filled with events you have to create instances of your custom event classes. You have a number of choices here. I would recommend to use the rails observers, so for a NewFriendEvent you would probably create a FriendShipObserver with an after_create hook that creates the event after a new friendship has been created. As soon as you start creating lots of events for a single action (e.g. tell every user that user X and user Y are now friends) I would highly recommend using something asynchronous like the workling plugin and starling.
+
+An event requires two attributes, a user and a source. The user is the user who sees the event on her social feed, the source is the object that sort of caused the event, which in this example would be the friendship, e.g.
+
+NewFriendEvent.create :user => some_user_interested_in_the_event, :source => new_friendship
+
+If you want the enable/disable event feature to work (a.k.a. privacy settings), the source must implement a user method which returns the user who caused the event. That user's privacy settings are then check before creating the actual FeedEvent instance.
 
 Warning: Do not create events using create! but use the create method (without the bang) - when a user has not subscribed to an event, a validation in the FeedEvent class will fail so that the event won't be created. If you use the create! method you will get an exception instead.
 
