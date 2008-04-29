@@ -2,7 +2,7 @@ require 'object_extensions'
 
 # configuration
 require 'ostruct'
-SocialFeed::Conf = OpenStruct.new :sender_email => '<no-reply@mydomain.com>'
+SocialFeed::Conf = OpenStruct.new YAML::load(File.read(RAILS_ROOT + '/config/social_feed.yml'))
 
 
 ActionController::Base.helper(SocialFeed::SocialFeedHelper) 
