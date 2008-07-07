@@ -23,6 +23,7 @@ module SocialFeed
     end
     
     def unsubscribe_from_feed_event(event_class)
+      self.feed_event_subscriptions_will_change!
       self.feed_event_subscriptions.delete event_class.to_s
     end
     
@@ -36,6 +37,7 @@ module SocialFeed
     end
     
     def unsubscribe_from_email(event_class)
+      self.email_subscriptions_will_change!
       self.email_subscriptions.delete event_class.to_s
     end
     
@@ -45,6 +47,7 @@ module SocialFeed
     end
     
     def disable_feed_event(event_class)
+      self.enabled_feed_events_will_change!
       self.enabled_feed_events.delete event_class.to_s
     end
     

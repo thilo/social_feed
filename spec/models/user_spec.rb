@@ -32,6 +32,20 @@ describe User, 'enable feed events' do
   it "should return false if an event is disabled" do
     @user.should_not be_feed_event_enabled(TestEvent)
   end
+  
+  it "should mark the attibute dirty when disabling" do
+    @user.enabled_feed_events = ['TestEvent']
+    @user.save!
+    @user.disable_feed_event TestEvent
+    @user.should be_enabled_feed_events_changed
+  end
+  
+  it "should mark the attibute dirty when enabling" do
+    @user.enabled_feed_events = ['TestEvent1']
+    @user.save!
+    @user.enable_feed_event TestEvent
+    @user.should be_enabled_feed_events_changed
+  end
 end
 
 describe User, 'subscribe to feed events' do
@@ -62,10 +76,24 @@ describe User, 'subscribe to feed events' do
     @user.should be_subscribed_to_feed_event(TestEvent)
   end
   
-  
   it "should return false if user is not subscribed" do
     @user.should_not be_subscribed_to_feed_event(TestEvent)
   end
+  
+  it "should mark the attibute dirty when subscribing" do
+    @user.feed_event_subscriptions = ['TestEvent1']
+    @user.save!
+    @user.subscribe_to_feed_event TestEvent
+    @user.should be_feed_event_subscriptions_changed
+  end
+  
+  it "should mark the attibute dirty when unsubscribing" do
+    @user.feed_event_subscriptions = ['TestEvent']
+    @user.save!
+    @user.unsubscribe_from_feed_event TestEvent
+    @user.should be_feed_event_subscriptions_changed
+  end
+  
 end
 
 describe User, 'subscribe to emails' do
@@ -96,9 +124,22 @@ describe User, 'subscribe to emails' do
     @user.should be_subscribed_to_email(TestEvent)
   end
   
-  
   it "should return false if user is not subscribed" do
     @user.should_not be_subscribed_to_email(TestEvent)
+  end
+  
+  it "should mark the attibute dirty when subscribing" do
+    @user.email_subscriptions = ['TestEvent1']
+    @user.save!
+    @user.subscribe_to_email TestEvent
+    @user.should be_email_subscriptions_changed
+  end
+  
+  it "should mark the attibute dirty when unsubscribing" do
+    @user.email_subscriptions = ['TestEvent']
+    @user.save!
+    @user.unsubscribe_from_email TestEvent
+    @user.should be_email_subscriptions_changed
   end
 end
 
