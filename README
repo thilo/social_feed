@@ -21,7 +21,7 @@ The plugins adds the following things to your application
 Installation
 ============
 
-If you are on rails edge (which supports git) you can simply do a 
+If you are on rails >= 2.1 (which supports git) you can simply do a 
 script/plugin install git://github.com/langalex/social_feed.git
 
 If not you need to do this from your rails root:
@@ -59,7 +59,7 @@ This creates a new class NewFriendEvent in the app/models/events directory (the 
 
 Secondly you should also customize the two description lines in the model, which will be used on the setting page. By commenting out either line, you can remove the corresponding line from the setings page.
 
-If you want your users to be able to receive emails for your new event, add a method deliver_new_friend to the FeedEventMailer found in app/models/feed_events. After adding the method a checkbox for this event will automatically appear on the settings page.
+If you want your users to be able to receive emails for your new event, add a method deliver_new_friend(event) to the FeedEventMailer found in app/models/feed_events. You can call the convenience method create_event_message(subject, event) to send your mails. After adding the method a checkbox for this event will automatically appear on the settings page.
 
 Creating actual events
 ======================
@@ -73,6 +73,11 @@ NewFriendEvent.create :user => some_user_interested_in_the_event, :source => new
 If you want the enable/disable event feature to work (a.k.a. privacy settings), the source must implement a user method which returns the user who caused the event. That user's privacy settings are then check before creating the actual FeedEvent instance.
 
 Warning: Do not create events using create! but use the create method (without the bang) - when a user has not subscribed to an event, a validation in the FeedEvent class will fail so that the event won't be created. If you use the create! method you will get an exception instead.
+
+Configuration
+=============
+
+You can setup the from address used by the FeedEventMailers create_event_message method in the social_feed.yml in your config folder.
 
 Gotchas
 =======
