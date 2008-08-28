@@ -70,7 +70,7 @@ describe FeedEvent, 'check event enabled when creating' do
     @event.should have(:no).errors_on(:source)
   end
   
-  it "should be valid if source user has event disabled but event has no privacy description (user can not diabled the event)" do
+  it "should be valid if source user has event disabled but event has no privacy description (user can not disabled the event)" do
     @user.stub!(:feed_event_enabled?).and_return(false)
     event = NotDisabableEvent.new :source => mock_model(FeedEvent, :user => @user)
     event.valid?
@@ -79,6 +79,42 @@ describe FeedEvent, 'check event enabled when creating' do
   
 end
 
+describe 'check event enabled when sending email' do
+  class TestFeedEvent < FeedEvent
+    privacy_description 'desc'
+  end
+    
+  class NotDisabableEvent < FeedEvent;end
+  
+  class Source; end
+  
+  before(:each) do
+    TestFeedEvent.connection.stub!(:insert)
+    FeedEventMailer.stub!(:send).with(:new).and_return(stub('mailer', :test_feed => true))
+    @user = mock_model(User, :subscribed_to_feed_event? => true, :subscribed_to_email? => true)
+    Source.stub!(:base_class).and_return(Source)
+    @source = mock_model(Source, :user => @user)
+    @event = TestFeedEvent.new :source => @source, :user => @user
+  end
+
+  it "should send no email if event disabled" do
+    @user.stub!(:feed_event_enabled?).and_return(false)
+    FeedEventMailer.should_receive(:send).with('deliver_test_feed', @event).never
+    @event.save
+  end
+  
+  it "should send email if event enabled" do
+    @user.stub!(:feed_event_enabled?).and_return(true)
+    FeedEventMailer.should_receive(:send).with('deliver_test_feed', @event)
+    @event.save
+  end
+  
+  it "should send no email if user can't enable event" do
+    event = NotDisabableEvent.new :source => @user, :user => @user
+    FeedEventMailer.should_receive(:send).with('not_disabable', event).never
+    event.save
+  end
+end
 describe FeedEvent, 'check subscriptions when creating' do
   class TestFeedEvent < FeedEvent
     subscribe_description 'desc'
