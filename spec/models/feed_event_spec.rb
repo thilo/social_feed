@@ -90,7 +90,7 @@ describe 'check event enabled when sending email' do
   
   before(:each) do
     TestFeedEvent.connection.stub!(:insert)
-    FeedEventMailer.stub!(:send).with(:new).and_return(stub('mailer', :test_feed => true))
+    FeedEventMailer.stub!(:send).with(:new).and_return(stub('mailer', :test_feed => true, :not_disabable => true))
     @user = mock_model(User, :subscribed_to_feed_event? => true, :subscribed_to_email? => true)
     Source.stub!(:base_class).and_return(Source)
     @source = mock_model(Source, :user => @user)
@@ -109,9 +109,9 @@ describe 'check event enabled when sending email' do
     @event.save
   end
   
-  it "should send no email if user can't enable event" do
-    event = NotDisabableEvent.new :source => @user, :user => @user
-    FeedEventMailer.should_receive(:send).with('not_disabable', event).never
+  it "should send email if user can't disable event" do
+    event = NotDisabableEvent.new :source => @source, :user => @user
+    FeedEventMailer.should_receive(:send).with('deliver_not_disabable', event)
     event.save
   end
 end

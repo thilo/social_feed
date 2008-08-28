@@ -56,7 +56,7 @@ class FeedEvent < ActiveRecord::Base
   private
   
   def source_disabled_event?
-    source.respond_to?(:user) && source.user && !source.user.feed_event_enabled?(self.class)
+    self.class.user_can_enable_event? && source.respond_to?(:user) && source.user && !source.user.feed_event_enabled?(self.class)
   end
   def send_email
     FeedEventMailer.send "deliver_#{self.class.name.underscore[0..-7]}", self if self.class.can_send_email? && 
@@ -75,8 +75,7 @@ class FeedEvent < ActiveRecord::Base
   end
   
   def source_user_has_event_enabled
-    errors.add :source, "this event is disabled by the user of #{self.source.class}" if self.class.user_can_enable_event? && 
-      source_disabled_event?
+    errors.add :source, "this event is disabled by the user of #{self.source.class}" if source_disabled_event?
   end
   
 end
